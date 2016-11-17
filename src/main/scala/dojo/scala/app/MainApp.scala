@@ -8,6 +8,7 @@ import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
 
 import scala.concurrent.Future
+import scala.io.StdIn
 
 object MainApp {
   def main(array: Array[String]): Unit = {
@@ -21,6 +22,13 @@ object MainApp {
       }
     }
 
-    Http().bindAndHandleAsync(handler, "localhost", 8080)
+    val server = Http().bindAndHandleAsync(handler, "localhost", 8080)
+    println(s"Server online at http://localhost:8080/")
+    println("Press RETURN to stop...")
+    StdIn.readLine()
+
+    server
+      .flatMap(_.unbind)
+      .onComplete(_ => actorSystem.terminate())
   }
 }
