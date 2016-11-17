@@ -8,7 +8,7 @@ import akka.http.scaladsl.server.Directives._
 import scala.concurrent.Future
 import scala.io.StdIn
 
-object MainApp extends AkkaConfig {
+object MainApp extends AkkaConfig with ServerConfig {
   def main(array: Array[String]): Unit = {
 
     val handler: HttpRequest => Future[HttpResponse] = Route.asyncHandler {
@@ -17,8 +17,8 @@ object MainApp extends AkkaConfig {
       }
     }
 
-    val server = Http().bindAndHandleAsync(handler, "localhost", 8080)
-    println(s"Server online at http://localhost:8080/")
+    val server = Http().bindAndHandleAsync(handler, interface, port)
+    println(s"Server online at http://$interface:$port/")
     println("Press RETURN to stop...")
     StdIn.readLine()
 
